@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import List
 
+
 def parse_walls_and_find_min_max(lines: List[str]):
     max_x_y = (None, None)
     min_x_y = (None, None)
@@ -22,6 +23,7 @@ def parse_walls_and_find_min_max(lines: List[str]):
         walls.append(wall)
     return walls, (min_x_y[0] - 300, min_x_y[1]), (max_x_y[0] + 300, max_x_y[1])
 
+
 def fill_walls(walls: List[List[tuple]]):
     for wall in walls:
         for i, rock in enumerate(wall):
@@ -32,20 +34,30 @@ def fill_walls(walls: List[List[tuple]]):
             if abs(rock_x - next_rock_x) > 1:
                 diff = rock_x - next_rock_x
                 index = i + 1
-                for x in range(rock_x - 1 if diff > 1 else rock_x + 1, next_rock_x, -1 if diff > 1 else 1):
+                for x in range(
+                    rock_x - 1 if diff > 1 else rock_x + 1,
+                    next_rock_x,
+                    -1 if diff > 1 else 1,
+                ):
                     wall.insert(index, (x, rock_y))
                     index += 1
             if abs(rock_y - next_rock_y) > 1:
                 diff = rock_y - next_rock_y
                 index = i + 1
-                for y in range(rock_y - 1 if diff > 1 else rock_y + 1, next_rock_y, -1 if diff > 1 else 1):
+                for y in range(
+                    rock_y - 1 if diff > 1 else rock_y + 1,
+                    next_rock_y,
+                    -1 if diff > 1 else 1,
+                ):
                     wall.insert(index, (rock_x, y))
                     index += 1
     return walls
 
+
 def print_map(air_map: List[List[str]]):
     for row in air_map:
         print("".join(row))
+
 
 def construct_map(walls: List[List[tuple]], min_x_y: tuple, max_x_y: tuple):
     air_map = []
@@ -63,6 +75,7 @@ def construct_map(walls: List[List[tuple]], min_x_y: tuple, max_x_y: tuple):
 
     return air_map
 
+
 def sand_fall(air_map: List[List[str]], start_x: int):
     y = 0
     x = start_x
@@ -78,13 +91,18 @@ def sand_fall(air_map: List[List[str]], start_x: int):
             y += 1
             x -= 1
             continue
-        if y == len(air_map) - 1 or x == len(air_map[y]) - 1 or air_map[y + 1][x + 1] == ".":
+        if (
+            y == len(air_map) - 1
+            or x == len(air_map[y]) - 1
+            or air_map[y + 1][x + 1] == "."
+        ):
             y += 1
             x += 1
             continue
         air_map[y][x] = "o"
         break
     return True
+
 
 def one():
 
@@ -96,9 +114,14 @@ def one():
     air_map = construct_map(walls, min_x_y, max_x_y)
     print_map(air_map)
     fall_point = 500 - min_x_y[0]
-    air_map = [["." for _ in range(len(air_map[0]))] for _ in range(min_x_y[1])] + air_map
+    air_map = [
+        ["." for _ in range(len(air_map[0]))] for _ in range(min_x_y[1])
+    ] + air_map
     # For level 2
-    air_map += [["." for _ in range(len(air_map[0]))], ["#" for _ in range(len(air_map[0]))]]
+    air_map += [
+        ["." for _ in range(len(air_map[0]))],
+        ["#" for _ in range(len(air_map[0]))],
+    ]
     sand_state = sand_fall(air_map, fall_point)
     count = 0
     while sand_state:
